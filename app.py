@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+import os
 
+dburl = os.environ['RDS_ENDPOINT']
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Admin:password@chaoskittydbinstance.cxtahwdy2ste.us-east-1.rds.amazonaws.com/taskdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://Admin:password@{dburl}/taskdb"
 db = SQLAlchemy(app)
 
 class Todo(db.Model):
