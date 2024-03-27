@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo App</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Todo App</h1>
+        <form method="POST" action="/add">
+            <input type="text" name="title" id="title" placeholder="Add Todo" required>
+            <button type="submit">Add</button>
+        </form>
+        <ul>
+            {% for todo in todo_list %}
+            <li>
+                {{ todo.title }}
+                <form method="POST" action="/delete/{{ todo.id }}">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
