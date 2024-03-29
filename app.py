@@ -1,11 +1,30 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
+from aws_xray_sdk.core import xray_recorder, patch
+from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
+import requests
 
 dburl = os.environ['RDS_ENDPOINT']
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://Admin:password@{dburl}/taskdb"
 db = SQLAlchemy(app)
+
+# X-Ray設定
+plugins = ('EC2Plugin',)
+xray_recorder.configure(plugins=plugins)
+xray_recorder.configure(service='chaos_kitty_demo_app')
+
+# HTTPリクエストに利用するモジュールを指定
+libraries = (['requests'])
+patch(libraries)
+
+# X-Rayサンプリングルールの設定
+sampling_rule_path = os.getcwd() + "/" + "sampling_rule.json"
+xray_recorder.configure(sampling_rules=sampling_rule_path)
+
+# FlaskとX-Rayを連携
+XRayMiddleware(app, xray_recorder)
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,0 +1,5 @@
+flask
+waitress
+pymysql
+flask_sqlalchemy
+aws-xray-sdk
