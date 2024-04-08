@@ -1,12 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
+import logging
 from aws_xray_sdk.core import xray_recorder, patch
 from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
 import requests
 
+LOGFILE_NAME = "/var/log/app.log"
+
 dburl = os.environ['RDS_ENDPOINT']
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+app.logger.setLevel(logging.DEBUG)
+fh = logging.FileHandler(LOGFILE_NAME)
+fh.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+app.logger.addHandler(fh)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://Admin:password@{dburl}/taskdb"
 db = SQLAlchemy(app)
 
@@ -42,6 +53,7 @@ def add():
     new_todo = Todo(title=title)
     db.session.add(new_todo)
     db.session.commit()
+    app.logger.info(f'add task "{title}"')
     return redirect(url_for("home"))
 
 
@@ -50,6 +62,7 @@ def delete(todo_id):
     todo = Todo.query.filter_by(id=todo_id).first()
     db.session.delete(todo)
     db.session.commit()
+    app.logger.info(f'delete task "{todo}"')
     return redirect(url_for("home"))
 
 
