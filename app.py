@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
 import logging
-from aws_xray_sdk.core import xray_recorder, patch
+from aws_xray_sdk.core import xray_recorder, patch, patch_all
 from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
 import requests
 
@@ -26,9 +26,8 @@ plugins = ('EC2Plugin',)
 xray_recorder.configure(plugins=plugins)
 xray_recorder.configure(service='chaos_kitty_demo_app')
 
-# HTTPリクエストに利用するモジュールを指定
-libraries = (['requests'])
-patch(libraries)
+# SQLAlchemyをパッチする
+patch_all()
 
 # X-Rayサンプリングルールの設定
 sampling_rule_path = os.getcwd() + "/" + "sampling_rule.json"
