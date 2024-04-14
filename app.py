@@ -45,6 +45,21 @@ class Todo(db.Model):
 @app.route("/", methods=["GET", "POST"])
 def home():
     todo_list = Todo.query.all()
+    n = 5  # 計算するフィボナッチ数列の項数
+
+    def fib(n):
+        if n <= 1:
+            return n
+        else:
+            return fib(n - 1) + fib(n - 2)
+
+    start_time = time.time()
+    result = fib(n)
+    end_time = time.time()
+
+    execution_time = end_time - start_time
+    app.logger.info(f"Fibonacci of {n} is {result} (Execution time: {execution_time:.6f} seconds)")
+
     return render_template("index.html", todo_list=todo_list)
 
 @app.route("/add", methods=["POST"])
