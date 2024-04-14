@@ -65,7 +65,7 @@ def delete(todo_id):
     app.logger.info(f'delete task "{todo}"')
     return redirect(url_for("home"))
 
-@app.route("/deletealldoneitems")
+@app.route("/deletealldoneitems", methods=["GET", "POST"])
 def delete_alldoneitems():
     todo_list = Todo.query.all()
     db.session.delete(todo_list)
