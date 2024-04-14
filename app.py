@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-import os
+import os, time
 import logging
 from aws_xray_sdk.core import xray_recorder, patch, patch_all
 from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
@@ -74,6 +74,21 @@ def delete_alldoneitems():
     app.logger.info(f'delete all tasks')
     return redirect(url_for("home"))
 
+@app.route("/cpu_load", methods=["GET"])
+def cpu_load():
+    start_time = time.time()
+    duration = 5  # 5秒間CPUを占有する
+
+    while True:
+        current_time = time.time()
+        elapsed_time = current_time - start_time
+        if elapsed_time > duration:
+            break
+        # CPUを占有する処理
+        for i in range(10000000):
+            pass
+
+    return "CPU load completed"
 
 if __name__ == "__main__":
     with app.app_context():
