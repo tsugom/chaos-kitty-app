@@ -87,8 +87,28 @@ def cpu_load():
         # CPUを占有する処理
         for i in range(10000000):
             pass
+    app.logger.info(f'CPU load completed')
 
     return "CPU load completed"
+
+@app.route("/fibonacci", methods=["GET"])
+def fibonacci():
+    n = 35  # 計算するフィボナッチ数列の項数
+
+    def fib(n):
+        if n <= 1:
+            return n
+        else:
+            return fib(n - 1) + fib(n - 2)
+
+    start_time = time.time()
+    result = fib(n)
+    end_time = time.time()
+
+    execution_time = end_time - start_time
+    app.logger.info(f"Fibonacci of {n} is {result} (Execution time: {execution_time:.6f} seconds)")
+
+    return f"Fibonacci of {n} is {result}"
 
 if __name__ == "__main__":
     with app.app_context():
