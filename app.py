@@ -19,6 +19,7 @@ fh.setFormatter(formatter)
 app.logger.addHandler(fh)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://Admin:password@{dburl}/taskdb"
+app.config['SQLALCHEMY_POOL_SIZE'] = 100
 db = SQLAlchemy(app)
 
 # X-Ray設定
@@ -62,6 +63,14 @@ def delete(todo_id):
     db.session.delete(todo)
     db.session.commit()
     app.logger.info(f'delete task "{todo}"')
+    return redirect(url_for("home"))
+
+@app.route("/deletealldoneitems")
+def delete_alldoneitems():
+    todo_list = Todo.query.all()
+    db.session.delete(todo_list)
+    db.session.commit()
+    app.logger.info(f'delete all tasks')
     return redirect(url_for("home"))
 
 

@@ -10,6 +10,7 @@
         <form method="POST" action="/add">
             <input type="text" name="title" id="title" placeholder="Add Todo" required>
             <button type="submit">Add</button>
+            <a href="/deletealldoneitems" class="button">delete all tasks</a>
         </form>
         <ul>
             {% for todo in todo_list %}

@@ -4,3 +4,4 @@ pymysql
 flask_sqlalchemy
 aws-xray-sdk
 requests
+SQLAlchemy
