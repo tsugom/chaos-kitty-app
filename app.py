@@ -45,7 +45,7 @@ class Todo(db.Model):
 @app.route("/", methods=["GET", "POST"])
 def home():
     todo_list = Todo.query.all()
-    n = 5  # 計算するフィボナッチ数列の項数
+    n = 8  # 計算するフィボナッチ数列の項数
 
     def fib(n):
         if n <= 1:
